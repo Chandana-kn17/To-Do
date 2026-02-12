@@ -21,16 +21,31 @@ const Item = styled.div`
     border-radius: 6px;
     border: 1px solid #ccc;
   }
+`;
 
-  button {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    font-size: 14px;
+const EditButton = styled.button`
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #4f46e5;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background: #4338ca;
   }
+`;
 
-  button:hover {
-    color: #4f46e5;
+const DeleteButton = styled.button`
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  color: #ef4444;
+
+  &:hover {
+    color: #dc2626;
   }
 `;
 
@@ -71,11 +86,15 @@ const TodoItem = ({ todo, onDelete, onToggle, onEdit }) => {
 
       {/* Edit button */}
       {!editing && (
-        <button onClick={() => setEditing(true)}>Edit</button>
+        <EditButton onClick={() => setEditing(true)}>
+          Edit
+        </EditButton>
       )}
 
       {/* Delete button */}
-      <button onClick={() => onDelete(todo.id)}>Delete</button>
+      <DeleteButton onClick={() => onDelete(todo.id)}>
+        Delete
+      </DeleteButton>
     </Item>
   );
 };

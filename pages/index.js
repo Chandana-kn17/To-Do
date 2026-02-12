@@ -1,18 +1,18 @@
 import styled from "styled-components";
 import TodoList from "../components/TodoList";
 
-const Page = styled.div`
+const PageWrapper = styled.div`
   min-height: 100vh;
-  background: #f4f6fb;
   display: flex;
   justify-content: center;
-  padding-top: 50px;
+  padding-top: 40px;
+  background: #f3f4f6;
 `;
 
 export default function Home() {
   return (
-    <Page>
+    <PageWrapper>
       <TodoList />
-    </Page>
+    </PageWrapper>
   );
 }
