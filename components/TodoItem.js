@@ -13,7 +13,6 @@ const Item = styled.div`
 
   span {
     flex: 1;
-    cursor: pointer;
   }
 
   input[type="text"] {
@@ -27,11 +26,11 @@ const Item = styled.div`
     border: none;
     background: transparent;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
   }
 
   button:hover {
-    color: red;
+    color: #4f46e5;
   }
 `;
 
@@ -41,15 +40,18 @@ const TodoItem = ({ todo, onDelete, onToggle, onEdit }) => {
 
   return (
     <Item>
+      {/* Checkbox */}
       <input
         type="checkbox"
         checked={todo.completed}
         onChange={() => onToggle(todo)}
       />
 
+      {/* Text / Edit input */}
       {editing ? (
         <input
           value={text}
+          autoFocus
           onChange={(e) => setText(e.target.value)}
           onBlur={() => {
             onEdit(todo.id, text);
@@ -62,12 +64,17 @@ const TodoItem = ({ todo, onDelete, onToggle, onEdit }) => {
             textDecoration: todo.completed ? "line-through" : "none",
             color: todo.completed ? "#9ca3af" : "#111827",
           }}
-          onDoubleClick={() => setEditing(true)}
         >
           {todo.todo}
         </span>
       )}
 
+      {/* Edit button */}
+      {!editing && (
+        <button onClick={() => setEditing(true)}>Edit</button>
+      )}
+
+      {/* Delete button */}
       <button onClick={() => onDelete(todo.id)}>Delete</button>
     </Item>
   );

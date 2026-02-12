@@ -58,55 +58,116 @@ const TodoList = () => {
     fetchTodos();
   }, []);
 
-  const handleAdd = async (text) => {
-    const res = await addTodo({
-      todo: text,
-      completed: false,
-      userId: 1,
-    });
+ const handleAdd = async (text) => {
+  const res = await addTodo({
+    todo: text,
+    completed: false,
+    userId: 1, // mock user
+  });
 
-    const updated = [...todos, res.data];
-    saveTodosToStorage(updated);
-    setTodos(updated);
+  const localTodo = {
+    ...res.data,
+    id: Date.now(),   
+    isLocal: true,   
   };
 
-  const handleToggle = async (todo) => {
-    const res = await updateTodo(todo.id, {
+  const updated = [...todos, localTodo];
+  saveTodosToStorage(updated);
+  setTodos(updated);
+};
+
+
+ const handleToggle = async (todo) => {
+  let updatedTodo;
+
+  if (todo.isLocal) {
+    updatedTodo = {
+      ...todo,
       completed: !todo.completed,
-    });
+    };
+  } else {
+    try {
+      const res = await updateTodo(todo.id, {
+        completed: !todo.completed,
+      });
 
-    const updated = todos.map((t) =>
-      t.id === todo.id ? res.data : t
-    );
+      updatedTodo = {
+        ...todo,
+        ...res.data,
+      };
+    } catch {
+      updatedTodo = {
+        ...todo,
+        completed: !todo.completed,
+      };
+    }
+  }
 
-    saveTodosToStorage(updated);
-    setTodos(updated);
-  };
+  const updatedTodos = todos.map((t) =>
+    t.id === todo.id ? updatedTodo : t
+  );
 
-  const handleEdit = async (id, text) => {
-    const res = await updateTodo(id, { todo: text });
+  saveTodosToStorage(updatedTodos);
+  setTodos(updatedTodos);
+};
 
-    const updated = todos.map((t) =>
-      t.id === id ? res.data : t
-    );
 
-    saveTodosToStorage(updated);
-    setTodos(updated);
-  };
+const handleEdit = async (id, text) => {
+  const existingTodo = todos.find((t) => t.id === id);
+
+  let updatedTodo;
+
+  if (existingTodo.isLocal) {
+    updatedTodo = {
+      ...existingTodo,
+      todo: text,
+    };
+  } 
+  else {
+    try {
+      const res = await updateTodo(id, { todo: text });
+
+      updatedTodo = {
+        ...existingTodo,
+        ...res.data,
+      };
+    } catch {
+      updatedTodo = {
+        ...existingTodo,
+        todo: text,
+      };
+    }
+  }
+
+  const updatedTodos = todos.map((t) =>
+    t.id === id ? updatedTodo : t
+  );
+
+  saveTodosToStorage(updatedTodos);
+  setTodos(updatedTodos);
+};
+
 
   const handleDelete = async (id) => {
-  // 1️⃣ Delete from UI + LocalStorage FIRST
+  const todoToDelete = todos.find((t) => t.id === id);
+
+  if (todoToDelete.isLocal) {
+    const updatedTodos = todos.filter((t) => t.id !== id);
+    saveTodosToStorage(updatedTodos);
+    setTodos(updatedTodos);
+    return;
+  }
+
+  try {
+    await deleteTodo(id);
+  } catch {
+  
+  }
   const updatedTodos = todos.filter((t) => t.id !== id);
   saveTodosToStorage(updatedTodos);
   setTodos(updatedTodos);
-
-  // 2️⃣ Try API delete (optional, non-blocking)
-  try {
-    await deleteTodo(id);
-  } catch (error) {
-    console.warn("DummyJSON delete failed (expected for local todos)");
-  }
 };
+
 
 
   if (loading) return <p>Loading...</p>;
