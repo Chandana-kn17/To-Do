@@ -1,18 +1,28 @@
 import styled from "styled-components";
-import TodoList from "../components/TodoList";
+import Header from "../components/Header/Header";
+import TodoContainer from "../container/TodoContainer";
+import AddTodoForm from "../components/AddTodoForm/AddTodoForm";
+import TodoList from "../components/TodoList/TodoList";
+
+
 
 const PageWrapper = styled.div`
   min-height: 100vh;
   display: flex;
   justify-content: center;
   padding-top: 40px;
-  background: #f3f4f6;
+  flex-direction: column;
+  align-items: center;
 `;
+
 
 export default function Home() {
   return (
-    <PageWrapper>
+    <TodoContainer>
+      <Header/>
+      <AddTodoForm />
       <TodoList />
-    </PageWrapper>
+    </TodoContainer>
   );
 }
+
