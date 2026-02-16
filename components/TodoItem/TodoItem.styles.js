@@ -51,3 +51,18 @@ export const DeleteButton = styled.button`
     color: #dc2626;
   }
 `;
+
+export const SaveButton = styled.button`
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #16a34a; /* green */
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background: #15803d;
+  }
+`;
+
